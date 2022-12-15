@@ -110,6 +110,7 @@
         stdout: (text) => {terminal.value += text + '\n';},
         stderr: (text) => {terminal.value += text + '\n';}
       });
+      pyodide.runPython('import sys, js; sys.platform = js.navigator.platform');
       let result = pyodide.runPython(code);
       if (result === undefined) {
         terminal.value += 'kode@Editor-System /kode/sessions % '
