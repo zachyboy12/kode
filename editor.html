@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .toprightbar {
+      float: right;
+    }
+    .topleftbar {
+      float: left;
+    }
+    .terminal {
+      width: 100%;
+      resize: vertical;
+      height: 540px;
+      border-left: 10% rgb(200, 198, 198);
+      border-right: none;
+      border-bottom: none;
+      border-top: 10% rgb(200, 198, 198);
+      outline: none;
+    }
+    .runbutton {
+      float: left;
+    }
+    button {
+      align-items: center;
+      background-color: #fff;
+      border: 2px solid #000;
+      box-sizing: border-box;
+      color: #000;
+      cursor: pointer;
+      display: inline-flex;
+      fill: #000;
+      font-family: 'Courier New';
+      font-size: 16px;
+      font-weight: 600;
+      height: 48px;
+      justify-content: center;
+      letter-spacing: -.8px;
+      line-height: 24px;
+      min-width: 140px;
+      outline: 0;
+      padding: 0 17px;
+      text-align: center;
+      text-decoration: none;
+      transition: all .3s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    button:focus {
+      color: #171e29;
+    }
+
+    button:hover {
+      border-color: #06f;
+      color: #06f;
+      fill: #06f;
+    }
+
+    button:active {
+      border-color: #06f;
+      color: #06f;
+      fill: #06f;
+    }
+
+    @media (min-width: 768px) {
+      button {
+        min-width: 170px;
+      }
+    }
+    .filename {
+      min-width: 170px;
+      min-height: 40px;
+      font-family: 'Courier New';
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topleftbar" class="topleftbar">
+    <input id="filename" class="filename">
+    <button id="savebutton" class="savebutton" onclick="save()">Save</button>
+    <br>
+  </div>
+  <div id="toprightbar" class="toprightbar">
+    <button id="runbutton" class="runbutton" onclick="run()">Run</button>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div id="code" class="code"></div>
+  <textarea id="terminal" class="terminal" onkeydown="checkInput()" spellcheck="false">kode@Editor-System /kode/sessions % </textarea>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.js" integrity="sha512-WYlXqL7GPpZL2ImDErTX0RMKy5hR17vGW5yY04p9Z+YhYFJcUUFRT31N29euNB4sLNNf/s0XQXZfzg3uKSoOdA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ext-language_tools.js"></script>
+  <script type="text/javascript">
+    async function run () {
+      const code = editor.getValue();
+      const pyodide = await loadPyodide({
+        stdout: (text) => {terminal.value += text + '\n';},
+        stderr: (text) => {terminal.value += text + '\n';}
+      });
+      let result = pyodide.runPython(code);
+      if (result === undefined) {
+        terminal.value += 'kode@Editor-System /kode/sessions % '
+        return;
+      }
+      terminal.value += result + '\nkode@Editor-System /kode/sessions % ';
+      console.log('asdf')
+    }
+    function checkInput () {
+      let event = window.event || event.which;
+      if (['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '`', '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', ' ', '[', '{', ']', '}', '\\', '|', ';', ':', '"', "'", '<', '>', ',', '.', '/', '?'].includes(event.key.toLowerCase())) {
+        command += event.key;
+        return;
+      }
+      if (event.key === 'Backspace' && command) {
+        command = command.slice(0, -1);
+        return;
+      }
+      else if (event.key === 'Backspace' && !command) {
+        event.preventDefault();
+        return;
+      }
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        if (command === 'clear' || command === 'cls') {
+          terminal.value = '';
+        }
+        else if (command === 'python' || command === 'python3') {
+          terminal.value += '\n';
+          run();
+        }
+        else if (command.startsWith('echo')) {
+          terminal.value += '\n' + command.slice(5) + '\n'
+        }
+        else if (command === '') {
+          terminal.value += '\n'
+        }
+        else {
+          terminal.value += '\nkodeterm: command not found: ' + command + '\n';
+        }
+      }
+      else {
+        return;
+      }
+      command = "";
+      terminal.value += 'kode@Editor-System /kode/sessions % '
+    }
+    function save () {
+      let blob = new Blob([editor.getValue()]);
+      let url = window.URL.createObjectURL(blob);
+      downloadURI(url, document.getElementById('filename').value);
+      window.URL.revokeObjectURL(url);
+    }
+    function downloadURI(uri, name) {
+      let link = document.createElement("a");
+      link.download = name;
+      link.href = uri;
+      link.click();
+    }
+    const editor = ace.edit("code");
+    let command = "";
+    editor.setTheme("ace/theme/tomorrow");
+    editor.getSession().setMode("ace/mode/python");
+    console.log('Ace Options: ', Object.keys(editor.$options))
+    editor.setOptions({
+      enableAutoIndent: true,
+      enableBasicAutocompletion: true,
+      enableSnippets: true,
+      enableLiveAutocompletion: true,
+      animatedScroll: true,
+      fontFamily: 'Courier New',
+      fontSize: 17,
+    });
+    document.getElementById("code").style.height = "600px";
+    const terminal = document.getElementById("terminal")
+    terminal.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      terminal.focus();
+      terminal.setSelectionRange(terminal.value.length, terminal.value.length);
+    })
+    </script>
+</body>
+</html>
