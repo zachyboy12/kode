@@ -160,7 +160,11 @@
     function save () {
       let blob = new Blob([editor.getValue()]);
       let url = window.URL.createObjectURL(blob);
-      downloadURI(url, document.getElementById('filename').value);
+      let filename = document.getElementById("filename").value;
+      if (!filename) {
+        filename = "file.py";
+      }
+      downloadURI(url, filename);
       window.URL.revokeObjectURL(url);
     }
     function downloadURI(uri, name) {
