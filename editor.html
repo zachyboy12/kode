@@ -246,6 +246,7 @@
       get: (searchParams, prop) => searchParams.get(prop),
     });
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
+      console.log(queryParameters);
       editor.setValue(localStorage.getItem(queryParameters.session));
       document.getElementById("session").innerHTML = queryParameters.session;
     }
