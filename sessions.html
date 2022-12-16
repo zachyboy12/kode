@@ -9,8 +9,6 @@
         body {
             display: block;
             text-align: center;
-        }
-        div {
             font-family: 'Courier New';
         }
         button {
@@ -22,7 +20,6 @@
             cursor: pointer;
             display: inline-flex;
             fill: #000;
-            font-family: 'Courier New';
             font-size: 16px;
             font-weight: 600;
             height: 48px;
@@ -64,7 +61,6 @@
         input {
             min-width: 170px;
             min-height: 40px;
-            font-family: 'Courier New';
             font-size: 20px;
             margin-right: 50px;
         }
@@ -87,6 +83,12 @@
             }
             const getValue = document.createElement("button");
             const getValueText = document.createTextNode("See Session Contents");
+            const uploadSession = document.createElement("button");
+            const uploadSessionText = document.createTextNode("Upload Session");
+            uploadSession.appendChild(uploadSessionText);
+            uploadSession.onclick = () => {
+                window.location = "https://zachyboy12.github.io/kode/editor?session=" + text;
+            }
             getValue.onclick = () => {
                 code.style.textAlign = 'left';
                 code.innerHTML = localStorage.getItem(text);
@@ -95,6 +97,7 @@
             newElement.appendChild(textNode);
             newElement.appendChild(removeNode);
             newElement.appendChild(getValue);
+            newElement.appendChild(uploadSession);
             if (append === true) {
                 document.body.appendChild(newElement)
             }
