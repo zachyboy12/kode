@@ -21,7 +21,6 @@
       border-bottom: none;
       border-top: 10% rgb(200, 198, 198);
       outline: none;
-      font-family: 'Courier New';
     }
     .runbutton {
       float: left;
@@ -35,7 +34,6 @@
       cursor: pointer;
       display: inline-flex;
       fill: #000;
-      font-family: 'Courier New';
       font-size: 16px;
       font-weight: 600;
       height: 48px;
@@ -77,7 +75,6 @@
     input {
       min-width: 170px;
       min-height: 40px;
-      font-family: 'Courier New';
       font-size: 20px;
     }
   </style>
@@ -87,7 +84,6 @@
     <input id="filename" class="filename" placeholder="File Name" spellcheck="false">
     <button id="savebutton" class="savebutton" onclick="save()">Save</button>
     <button id="uploadbutton" class="uploadbutton" onclick="upload()">Upload</button>
-    <input id="session" class="session" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Session Name">
     <br>
   </div>
   <div id="toprightbar" class="toprightbar">
@@ -129,7 +125,7 @@
       if (command === 'clear' || command === 'cls') {
         terminal.value = '';
       }
-      else if (command === 'python' || command === 'python3') {
+      else if (command.startsWith('python') || command.startsWith('python3')) {
         terminal.value += '\n';
         run();
       }
@@ -149,6 +145,9 @@
         terminal.value += result;
         command = result;
       }
+    }
+    function parseAlias (aliasString) {
+      
     }
     function commandMenu () {
       menuItem = prompt('Command:')
@@ -240,7 +239,7 @@
     });
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
       editor.setValue(localStorage.getItem(queryParameters.session));
-      document.getElementById("session").value = queryParameters.session;
+      document.getElementById("session").innerHTML = queryParameters.session;
     }
     let command = "";
     let previousCommands = [];
@@ -265,8 +264,8 @@
       terminal.setSelectionRange(terminal.value.length, terminal.value.length);
     })
     window.addEventListener('beforeunload', (event) => {
-      if (document.getElementById("session").value) {
-        localStorage.setItem(document.getElementById("session").value, editor.getValue());
+      if (queryParameters.session) {
+        localStorage.setItem(queryParameters.session, editor.getValue());
       }
     })
     </script>
