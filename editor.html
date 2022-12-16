@@ -239,7 +239,6 @@
     });
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
       editor.setValue(localStorage.getItem(queryParameters.session));
-      document.getElementById("session").innerHTML = queryParameters.session;
     }
     let command = "";
     let previousCommands = [];
