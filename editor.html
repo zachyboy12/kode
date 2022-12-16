@@ -81,8 +81,8 @@
       font-family: 'Courier New';
     }
     .session {
-      font-family: 'Courier New';
-      outline: none;
+      align-items: center;
+      display: inline-flex;
     }
   </style>
 </head>
@@ -91,7 +91,7 @@
     <input id="filename" class="filename" placeholder="File Name" spellcheck="false">
     <button id="savebutton" class="savebutton" onclick="save()">Save</button>
     <button id="uploadbutton" class="uploadbutton" onclick="upload()">Upload</button>
-    <button id="session" class="session"></button>
+    <pre id="session" class="session"></pre>
     <br>
   </div>
   <div id="toprightbar" class="toprightbar">
