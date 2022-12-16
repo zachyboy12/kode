@@ -14,8 +14,8 @@
     }
     .terminal {
       width: 100%;
+      height: 100vh;
       resize: none;
-      height: 540px;
       border-left: 10% rgb(200, 198, 198);
       border-right: none;
       border-bottom: none;
@@ -42,7 +42,7 @@
       justify-content: center;
       letter-spacing: -.8px;
       line-height: 24px;
-      min-width: 140px;
+      min-width: 130px;
       outline: 0;
       padding: 0 17px;
       text-align: center;
@@ -74,7 +74,7 @@
         min-width: 170px;
       }
     }
-    .filename {
+    input {
       min-width: 170px;
       min-height: 40px;
       font-family: 'Courier New';
@@ -84,8 +84,10 @@
 </head>
 <body>
   <div id="topleftbar" class="topleftbar">
-    <input id="filename" class="filename" placeholder="File Name">
+    <input id="filename" class="filename" placeholder="File Name" spellcheck="false">
     <button id="savebutton" class="savebutton" onclick="save()">Save</button>
+    <button id="uploadbutton" class="uploadbutton" onclick="upload()">Upload</button>
+    <input id="session" class="session" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Session Name">
     <br>
   </div>
   <div id="toprightbar" class="toprightbar">
@@ -117,10 +119,47 @@
         return;
       }
       terminal.value += result + '\nkode@Editor-System /kode/sessions % ';
-      console.log('asdf')
+    }
+    function runCommand () {
+      previousCommands.push(command);
+      if (command === undefined) {
+        terminal.value += '\n'
+        return;
+      }
+      if (command === 'clear' || command === 'cls') {
+        terminal.value = '';
+      }
+      else if (command === 'python' || command === 'python3') {
+        terminal.value += '\n';
+        run();
+      }
+      else if (command.startsWith('echo')) {
+        terminal.value += '\n' + command.slice(5) + '\n'
+      }
+      else if (command === '') {
+        terminal.value += '\n'
+      }
+      else {
+        terminal.value += '\nkodeterm: command not found: ' + command + '\n';
+      }
+    }
+    function commandMenuItemExecute (commandItem) {
+      if (commandItem.startsWith('get previous command ')) {
+        let result = previousCommands[Number(commandItem.slice(21))];
+        terminal.value += result;
+        command = result;
+      }
+    }
+    function commandMenu () {
+      menuItem = prompt('Command:')
+      if (!menuItem) {
+        return;
+      }
+      commandMenuItemExecute(menuItem.toLowerCase());
     }
     function checkInput () {
       let event = window.event || event.which;
+      console.log(event);
       if (['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '`', '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', ' ', '[', '{', ']', '}', '\\', '|', ';', ':', '"', "'", '<', '>', ',', '.', '/', '?'].includes(event.key.toLowerCase())) {
         command += event.key;
         return;
@@ -135,22 +174,20 @@
       }
       if (event.keyCode === 13) {
         event.preventDefault();
-        if (command === 'clear' || command === 'cls') {
-          terminal.value = '';
-        }
-        else if (command === 'python' || command === 'python3') {
-          terminal.value += '\n';
-          run();
-        }
-        else if (command.startsWith('echo')) {
-          terminal.value += '\n' + command.slice(5) + '\n'
-        }
-        else if (command === '') {
-          terminal.value += '\n'
-        }
-        else {
-          terminal.value += '\nkodeterm: command not found: ' + command + '\n';
-        }
+        runCommand();
+      }
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        return;
+      }
+      else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        commandMenu();
+        return;
+      }
+      else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        return;
       }
       else {
         return;
@@ -174,11 +211,40 @@
       link.href = uri;
       link.click();
     }
+    
+    function readInputFile (inputElement, callback) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        callback(reader.result)
+      };
+      reader.readAsText(inputElement.files[0]);
+    };
+
+    function upload () {
+      var element = document.createElement('input');
+      element.setAttribute('type', 'file');
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.onchange = () => {
+        readInputFile(element, (data) => {
+          editor.setValue(data);
+          document.body.removeChild(element);
+        }
+      )}
+      element.click();
+    }
+
     const editor = ace.edit("code");
-    if (localStorage.getItem("code")) {
-      editor.setValue(localStorage.getItem("code"));
+    const queryParameters = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+    if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
+      editor.setValue(localStorage.getItem(queryParameters.session));
+      document.getElementById("session").value = queryParameters.session;
     }
     let command = "";
+    let previousCommands = [];
+    let commandNumber = previousCommands.length;
     editor.setTheme("ace/theme/tomorrow");
     editor.getSession().setMode("ace/mode/python");
     console.log('Ace Options: ', Object.keys(editor.$options))
@@ -199,7 +265,9 @@
       terminal.setSelectionRange(terminal.value.length, terminal.value.length);
     })
     window.addEventListener('beforeunload', (event) => {
-      localStorage.setItem("code", editor.getValue());
+      if (document.getElementById("session").value) {
+        localStorage.setItem(document.getElementById("session").value, editor.getValue());
+      }
     })
     </script>
 </body>
