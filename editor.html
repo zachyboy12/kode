@@ -80,10 +80,6 @@
     * {
       font-family: 'Courier New';
     }
-    .session {
-      display: block;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
@@ -91,9 +87,9 @@
     <input id="filename" class="filename" placeholder="File Name" spellcheck="false">
     <button id="savebutton" class="savebutton" onclick="save()">Save</button>
     <button id="uploadbutton" class="uploadbutton" onclick="upload()">Upload</button>
+    <p id="session" class="session"></p>
     <br>
   </div>
-  <p id="session" class="session"></p>
   <div id="toprightbar" class="toprightbar">
     <button id="runbutton" class="runbutton" onclick="run()">Run</button>
   </div>
