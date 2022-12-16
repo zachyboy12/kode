@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kode Sessions</title>
+    <style>
+        body {
+            display: block;
+            text-align: center;
+        }
+        div {
+            font-family: 'Courier New';
+        }
+        button {
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #000;
+            box-sizing: border-box;
+            color: #000;
+            cursor: pointer;
+            display: inline-flex;
+            fill: #000;
+            font-family: 'Courier New';
+            font-size: 16px;
+            font-weight: 600;
+            height: 48px;
+            justify-content: center;
+            letter-spacing: -.8px;
+            line-height: 24px;
+            min-width: 130px;
+            outline: 0;
+            padding: 0 17px;
+            text-align: center;
+            text-decoration: none;
+            transition: all .3s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+      
+        button:focus {
+            color: #171e29;
+        }
+      
+        button:hover {
+            border-color: #06f;
+            color: #06f;
+            fill: #06f;
+        }
+      
+        button:active {
+            border-color: #06f;
+            color: #06f;
+            fill: #06f;
+        }
+      
+        @media (min-width: 768px) {
+            button {
+                min-width: 170px;
+            }
+        }
+        input {
+            min-width: 170px;
+            min-height: 40px;
+            font-family: 'Courier New';
+            font-size: 20px;
+            margin-right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function create (element, text, append, linebreak) {
+            const newElement = document.createElement(element);
+            const textNode = document.createTextNode(text + ' ');
+            const removeNode = document.createElement("button");
+            const removeNodeText = document.createTextNode("Remove Session");
+            removeNode.appendChild(removeNodeText);
+            removeNode.onclick = () => {
+                localStorage.removeItem(text);
+                document.body.removeChild(newElement);
+                if (linebreak) {
+                    document.body.removeChild(linebreak);
+                }
+            }
+            const getValue = document.createElement("button");
+            const getValueText = document.createTextNode("See Session Contents");
+            getValue.onclick = () => {
+                code.style.textAlign = 'left';
+                code.innerHTML = localStorage.getItem(text);
+            }
+            getValue.appendChild(getValueText);
+            newElement.appendChild(textNode);
+            newElement.appendChild(removeNode);
+            newElement.appendChild(getValue);
+            if (append === true) {
+                document.body.appendChild(newElement)
+            }
+            else {
+                document.body.insertBefore(newElement, append)
+            }
+        }
+        Object.keys(localStorage).forEach((key) => {
+            const linebreak = document.createElement("br");
+            create("div", key, true, linebreak);
+            document.body.appendChild(linebreak);
+        })
+        const newSession = document.createElement("input");
+        newSession.placeholder = 'New Session Name';
+        document.body.appendChild(newSession);
+        const buttonTextNode = document.createTextNode("Create Session");
+        const makeSession = document.createElement("button");
+        makeSession.onclick = () => {
+            if (!newSession.value) {
+                alert("Session name must be specified.");
+                return;
+            }
+            localStorage.setItem(newSession.value, '')
+            linebreak = document.createElement("br");
+            create("div", newSession.value, newSession, linebreak);
+            document.body.insertBefore(linebreak, newSession);
+        }
+        makeSession.appendChild(buttonTextNode);
+        document.body.appendChild(makeSession);
+        let linebreak = document.createElement("br");
+        document.body.appendChild(linebreak);
+        const code = document.createElement("pre");
+        code.style.textAlign = 'center';
+        code.style.border = '2px solid Black';
+        code.style.padding = '100px'
+        const codeText = document.createTextNode("The code of the session you selected will be previewed here.");
+        code.appendChild(codeText);
+        document.body.appendChild(code);
+    </script>
+</body>
+</html>
