@@ -242,11 +242,9 @@
     }
 
     const editor = ace.edit("code");
-    const queryParameters = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const queryParameters = Object.fromEntries(urlSearchParams.entries());
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
-      console.log(queryParameters);
       editor.setValue(localStorage.getItem(queryParameters.session));
       document.getElementById("session").innerHTML = queryParameters.session;
     }
