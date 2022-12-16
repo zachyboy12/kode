@@ -77,6 +77,13 @@
       min-height: 40px;
       font-size: 20px;
     }
+    * {
+      font-family: 'Courier New';
+    }
+    .session {
+      display: block;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -86,6 +93,7 @@
     <button id="uploadbutton" class="uploadbutton" onclick="upload()">Upload</button>
     <br>
   </div>
+  <p id="session" class="session"></p>
   <div id="toprightbar" class="toprightbar">
     <button id="runbutton" class="runbutton" onclick="run()">Run</button>
   </div>
@@ -239,6 +247,7 @@
     });
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
       editor.setValue(localStorage.getItem(queryParameters.session));
+      document.getElementById("session").innerHTML = queryParameters.session;
     }
     let command = "";
     let previousCommands = [];
