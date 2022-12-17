@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Code</title>
+    <style>
+        input {
+            min-width: 170px;
+            min-height: 40px;
+            font-size: 20px;
+            text-align: left;
+          }
+          * {
+            font-family: 'Courier New';
+            text-align: center;
+          }
+          button {
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #000;
+            box-sizing: border-box;
+            color: #000;
+            cursor: pointer;
+            display: inline-flex;
+            fill: #000;
+            font-size: 16px;
+            font-weight: 600;
+            height: 48px;
+            justify-content: center;
+            letter-spacing: -.8px;
+            line-height: 24px;
+            min-width: 130px;
+            outline: 0;
+            padding: 0 17px;
+            text-align: center;
+            text-decoration: none;
+            transition: all .3s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+          }
+      
+          button:focus {
+            color: #171e29;
+          }
+      
+          button:hover {
+            border-color: #06f;
+            color: #06f;
+            fill: #06f;
+          }
+      
+          button:active {
+            border-color: #06f;
+            color: #06f;
+            fill: #06f;
+          }
+      
+          @media (min-width: 768px) {
+            button {
+              min-width: 170px;
+            }
+          }
+    </style>
+</head>
+<body>
+    Theme: <input value="tomorrow" id="theme">
+    <br>
+    <br>
+    Font Family: <input value="Courier New" id="fontfamily">
+    <br>
+    <br>
+    Font Size: <input value="17" type="number" id="fontsize">
+    <br>
+    <br>
+    <button onclick="configure()">Configure</button>
+    <br>
+    <br>
+    <script>
+      const fontSize = document.getElementById("fontsize".value);
+      const theme = document.getElementById("theme").value;
+      const fontFamily = document.getElementById("fontfamily").value;
+      function configure () {
+        localStorage.setItem('font size', fontSize);
+        localStorage.setItem('theme', theme);
+        localStorage.setItem('font family', fontFamily);
+      }
+    </script>
+</body>
+</html>
