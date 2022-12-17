@@ -106,9 +106,14 @@
             }
         }
         Object.keys(localStorage).forEach((key) => {
-            const linebreak = document.createElement("br");
-            create("div", key, true, linebreak);
-            document.body.appendChild(linebreak);
+            if (key === "theme" || key === 'font family' || key === 'font size') {
+                
+            }
+            else {
+                const linebreak = document.createElement("br");
+                create("div", key, true, linebreak);
+                document.body.appendChild(linebreak);
+            }
         })
         const newSession = document.createElement("input");
         newSession.placeholder = 'New Session Name';
@@ -118,6 +123,10 @@
         makeSession.onclick = () => {
             if (!newSession.value) {
                 alert("Session name must be specified.");
+                return;
+            }
+            if (newSession.value === 'theme' || newSession.value === 'font family' || newSession.value === 'font size') {
+                alert('Cannot use session name.')
                 return;
             }
             if (localStorage.getItem(newSession.value)) {
