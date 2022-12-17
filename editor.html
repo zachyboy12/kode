@@ -117,7 +117,11 @@
         stderr: (text) => {terminal.value += text + '\n';}
       });
       pyodide.runPython('import sys, js; sys.platform = js.navigator.platform');
-      let result = pyodide.runPython(code);
+      try { 
+        let result = pyodide.runPython(code);
+      } catch (error) {
+        terminal.value += error + '\n';
+      }
       if (result === undefined) {
         terminal.value += 'kode@Editor-System /kode/sessions % '
         return;
