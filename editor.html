@@ -120,9 +120,12 @@
       try { 
         let result = pyodide.runPython(code);
         if (result !== undefined) {
-          terminal.value += result;
+          terminal.value += result + '\n';
         }
-        terminal.value += '\nkode@Editor-System /kode/sessions % ';
+        else {
+          
+        }
+        terminal.value += 'kode@Editor-System /kode/sessions % ';
       } catch (error) {
         terminal.value += error + '\nkode@Editor-System /kode/sessions % ';
       }
