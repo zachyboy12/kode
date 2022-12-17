@@ -119,7 +119,10 @@
       pyodide.runPython('import sys, js; sys.platform = js.navigator.platform');
       try { 
         let result = pyodide.runPython(code);
-        terminal.value += result + '\nkode@Editor-System /kode/sessions % ';
+        if (result !== undefined) {
+          terminal.value += result;
+        }
+        terminal.value += '\nkode@Editor-System /kode/sessions % ';
       } catch (error) {
         terminal.value += error + '\nkode@Editor-System /kode/sessions % ';
       }
