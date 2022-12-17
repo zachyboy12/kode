@@ -66,13 +66,13 @@
     </style>
 </head>
 <body>
-    Theme: <input value="tomorrow" id="theme">
+    Theme: <input placeholder="tomorrow" id="theme">
     <br>
     <br>
-    Font Family: <input value="Courier New" id="fontfamily">
+    Font Family: <input placeholder="Courier New" id="fontfamily">
     <br>
     <br>
-    Font Size: <input value="17" type="number" id="fontsize">
+    Font Size: <input placeholder="17" type="number" id="fontsize">
     <br>
     <br>
     <button onclick="configure()">Configure</button>
@@ -82,6 +82,15 @@
       const fontSize = document.getElementById("fontsize").value;
       const theme = document.getElementById("theme").value;
       const fontFamily = document.getElementById("fontfamily").value;
+      if (!fontSize) {
+        fontSize = 17;
+      }
+      if (!theme) {
+        theme = 'tomorrow';
+      }
+      if (!fontFamily) {
+        fontFamily = "Courier New";
+      }
       function configure () {
         localStorage.setItem('font size', fontSize);
         localStorage.setItem('theme', theme);
