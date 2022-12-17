@@ -105,8 +105,6 @@
   <textarea id="terminal" class="terminal" onkeydown="checkInput()" spellcheck="false">kode@Editor-System /kode/sessions % </textarea>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.js" integrity="sha512-WYlXqL7GPpZL2ImDErTX0RMKy5hR17vGW5yY04p9Z+YhYFJcUUFRT31N29euNB4sLNNf/s0XQXZfzg3uKSoOdA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ext-language_tools.js"></script>
   <script type="text/javascript">
@@ -164,7 +162,7 @@
       
     }
     function commandMenu () {
-      menuItem = prompt('Command:')
+      let menuItem = prompt('Command:')
       if (!menuItem) {
         return;
       }
@@ -250,15 +248,6 @@
     const editor = ace.edit("code");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParameters = Object.fromEntries(urlSearchParams.entries());
-    if (!localStorage.getItem('theme')) {
-      localStorage.setItem('theme', 'tomorrow')
-    };
-    if (!localStorage.getItem('font family')) {
-      localStorage.setItem('font family', 'Courier New');
-    };
-    if (!localStorage.getItem('font size')) {
-      localStorage.setItem('font size', 17);
-    };
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
       editor.setValue(localStorage.getItem(queryParameters.session));
       document.getElementById("session").innerHTML = queryParameters.session;
@@ -266,7 +255,7 @@
     let command = "";
     let previousCommands = [];
     let commandNumber = previousCommands.length;
-    editor.setTheme("ace/theme/" + localStorage.getItem('theme'));
+    editor.setTheme("ace/theme/tomorrow");
     editor.getSession().setMode("ace/mode/python");
     console.log('Ace Options: ', Object.keys(editor.$options))
     editor.setOptions({
@@ -275,8 +264,8 @@
       enableSnippets: true,
       enableLiveAutocompletion: true,
       animatedScroll: true,
-      fontFamily: localStorage.getItem('font family'),
-      fontSize: Number(localStorage.getItem('font size')),
+      fontFamily: "Courier New",
+      fontSize: 17,
     });
     document.getElementById("code").style.height = "600px";
     const terminal = document.getElementById("terminal")
