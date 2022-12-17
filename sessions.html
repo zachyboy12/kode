@@ -125,10 +125,6 @@
                 alert("Session name must be specified.");
                 return;
             }
-            if (newSession.value === 'theme' || newSession.value === 'font family' || newSession.value === 'font size') {
-                alert('Cannot use session name.')
-                return;
-            }
             if (localStorage.getItem(newSession.value)) {
                 alert("Session name already taken.");
                 return;
