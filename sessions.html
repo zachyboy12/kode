@@ -120,6 +120,10 @@
                 alert("Session name must be specified.");
                 return;
             }
+            if (localStorage.getItem(newSession.value)) {
+                alert("Session name already taken.");
+                return;
+            }
             localStorage.setItem(newSession.value, '')
             linebreak = document.createElement("br");
             create("div", newSession.value, newSession, linebreak);
