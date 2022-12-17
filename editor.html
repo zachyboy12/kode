@@ -250,6 +250,15 @@
     const editor = ace.edit("code");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParameters = Object.fromEntries(urlSearchParams.entries());
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'tomorrow')
+    };
+    if (!localStorage.getItem('font family')) {
+      localStorage.setItem('font family', 'Courier New');
+    };
+    if (!localStorage.getItem('font size')) {
+      localStorage.setItem('font size', 17);
+    };
     if (queryParameters.session && localStorage.getItem(queryParameters.session)) {
       editor.setValue(localStorage.getItem(queryParameters.session));
       document.getElementById("session").innerHTML = queryParameters.session;
@@ -257,7 +266,7 @@
     let command = "";
     let previousCommands = [];
     let commandNumber = previousCommands.length;
-    editor.setTheme("ace/theme/tomorrow");
+    editor.setTheme("ace/theme/" + localStorage.getItem('theme'));
     editor.getSession().setMode("ace/mode/python");
     console.log('Ace Options: ', Object.keys(editor.$options))
     editor.setOptions({
@@ -266,8 +275,8 @@
       enableSnippets: true,
       enableLiveAutocompletion: true,
       animatedScroll: true,
-      fontFamily: 'Courier New',
-      fontSize: 17,
+      fontFamily: localStorage.getItem('font family'),
+      fontSize: Number(localStorage.getItem('font size')),
     });
     document.getElementById("code").style.height = "600px";
     const terminal = document.getElementById("terminal")
