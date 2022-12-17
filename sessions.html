@@ -106,14 +106,9 @@
             }
         }
         Object.keys(localStorage).forEach((key) => {
-            if (key === "theme" || key === 'font family' || key === 'font size') {
-                
-            }
-            else {
-                const linebreak = document.createElement("br");
-                create("div", key, true, linebreak);
-                document.body.appendChild(linebreak);
-            }
+            const linebreak = document.createElement("br");
+            create("div", key, true, linebreak);
+            document.body.appendChild(linebreak);
         })
         const newSession = document.createElement("input");
         newSession.placeholder = 'New Session Name';
