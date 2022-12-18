@@ -85,6 +85,20 @@
             const getValueText = document.createTextNode("See Session Contents");
             const uploadSession = document.createElement("button");
             const uploadSessionText = document.createTextNode("Upload Session");
+            const renameSession = document.createElement("button");
+            const renameSessionText = document.createTextNode("Rename Session")
+            renameSession.appendChild(renameSessionText);
+            renameSession.onclick = () => {
+                let newSessionName = prompt("New Session Name:");
+                if (newSessionName === '') {
+                    return;
+                }
+                let sessionContents = localStorage.getItem(text);
+                localStorage.setItem(newSessionName, sessionContents);
+                localStorage.removeItem(text);
+                removeNode.click();
+                create('div', newSessionName, newSession);
+            }
             uploadSession.appendChild(uploadSessionText);
             uploadSession.onclick = () => {
                 window.location = "https://zachyboy12.github.io/kode/editor?session=" + text;
@@ -98,6 +112,10 @@
             newElement.appendChild(removeNode);
             newElement.appendChild(getValue);
             newElement.appendChild(uploadSession);
+            newElement.appendChild(renameSession);
+            newElement.appendChild(document.createElement("br"));
+            newElement.appendChild(document.createElement("br"));
+            newElement.appendChild(document.createElement("br"));
             if (append === true) {
                 document.body.appendChild(newElement)
             }
