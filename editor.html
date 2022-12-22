@@ -111,8 +111,17 @@
     async function run () {
       const code = editor.getValue();
       const pyodide = await loadPyodide({
-        stdout: (text) => {terminal.value += text + '\n';},
-        stderr: (text) => {terminal.value += text + '\n';}
+        stdout: (text) => {
+          if (isFirst) {
+            isFirst = false;
+            terminal.value += '\n'
+            return;
+          }
+          terminal.value += text + '\n';
+        },
+        stderr: (text) => {
+          terminal.value += text + '\n';
+        }
       });
       pyodide.runPython('import sys, js; sys.platform = js.navigator.platform');
       try { 
@@ -124,8 +133,10 @@
           
         }
         terminal.value += 'kode@Editor-System /kode/sessions % ';
+        isFirst = true;
       } catch (error) {
         terminal.value += error + '\nkode@Editor-System /kode/sessions % ';
+        isFirst = true;
       }
     }
     function runCommand () {
@@ -157,9 +168,6 @@
         terminal.value += result;
         command = result;
       }
-    }
-    function parseAlias (aliasString) {
-      
     }
     function commandMenu () {
       let menuItem = prompt('Command:')
@@ -244,7 +252,6 @@
       )}
       element.click();
     }
-
     const editor = ace.edit("code");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParameters = Object.fromEntries(urlSearchParams.entries());
@@ -255,6 +262,7 @@
     let command = "";
     let previousCommands = [];
     let commandNumber = previousCommands.length;
+    let isFirst = true;
     editor.setTheme("ace/theme/tomorrow");
     editor.getSession().setMode("ace/mode/python");
     console.log('Ace Options: ', Object.keys(editor.$options))
