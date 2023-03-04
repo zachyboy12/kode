@@ -14,6 +14,14 @@ function uuid4() {
     });
 }
 
+Object.prototype.hasProperty(propertyName) {
+    try {
+        return this.hasOwnProperty(propertyName);
+    } catch {
+        return this.hasOwn(propertyName);
+    }
+}
+
 class EmptyCoordinate {}
 
 class Shape {
@@ -141,7 +149,7 @@ class Label extends Shape {
     }
 
     update(options) {
-        if (options.hasOwnProperty("text")) {
+        if (options.hasProperty("text")) {
             this.text = options.text;
         }
         this.move(this.x, this.y);
@@ -169,17 +177,17 @@ class Level {
             let filled = true;
             let fillColor = "black";
             let borderColor = "black";
-            if (options.hasOwnProperty("font")) {
+            if (options.hasProperty("font")) {
                 font = options.font;
             }
-            if (options.hasOwnProperty("filled")) {
+            if (options.hasProperty("filled")) {
                 filled = options.filled;
             }
-            if (options.hasOwnProperty("fillColor")) {
+            if (options.hasProperty("fillColor")) {
                 fillColor = options.fillColor;
                 borderColor = options.fillColor;
             }
-            if (options.hasOwnProperty("borderColor")) {
+            if (options.hasProperty("borderColor")) {
                 borderColor = options.borderColor;
             }
             this.context.font = font;
@@ -202,7 +210,7 @@ class Level {
         this.state[id] = () => {
             let lineColor = "black";
             this.context.beginPath();
-            if (options.hasOwnProperty("lineColor")) {
+            if (options.hasProperty("lineColor")) {
                 lineColor = options.lineColor;
             }
             this.context.moveTo(from[0], from[1]);
@@ -219,10 +227,10 @@ class Level {
             let fillColor = null;
             let borderColor = "black";
             this.context.beginPath();
-            if (options.hasOwnProperty("fillColor")) {
+            if (options.hasProperty("fillColor")) {
                 fillColor = options.fillColor;
             }
-            if (options.hasOwnProperty("borderColor")) {
+            if (options.hasProperty("borderColor")) {
                 borderColor = options.borderColor;
             }
             this.context.rect(x, y, width, height);
@@ -242,10 +250,10 @@ class Level {
             let fillColor = null;
             let borderColor = "black";
             this.context.beginPath();
-            if (options.hasOwnProperty("fillColor")) {
+            if (options.hasProperty("fillColor")) {
                 fillColor = options.fillColor;
             }
-            if (options.hasOwnProperty("borderColor")) {
+            if (options.hasProperty("borderColor")) {
                 borderColor = options.borderColor;
             }
             this.context.arc(x, y, radius, 0, Math.PI * 2);
@@ -315,10 +323,10 @@ class playitjsConnector {
         });
         let callbacks = callback(this);
         this.runCallback = () => {};
-        if (callbacks.hasOwnProperty("run")) {
+        if (callbacks.hasProperty("run")) {
             this.runCallback = callbacks.run;
         }
-        if (callbacks.hasOwnProperty("keyListener")) {
+        if (callbacks.hasProperty("keyListener")) {
             parent.addEventListener("keydown", event => {
                 let preventDefault = callbacks.keyListener(event.key);
                 if (preventDefault === undefined) {
